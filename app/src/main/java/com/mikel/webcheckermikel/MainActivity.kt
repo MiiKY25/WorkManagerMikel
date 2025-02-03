@@ -44,6 +44,12 @@ class MainActivity : Activity() {
 
     /**
      * Metodo que se ejecuta al crear la actividad.
+     *
+     * <p>Configura los permisos necesarios, inicializa las vistas y configura los listeners
+     * para los botones de inicio y parada de la tarea de fondo. También permite al usuario
+     * introducir dinámicamente la URL y la palabra clave mediante campos de texto.</p>
+     *
+     * @param savedInstanceState Estado previamente guardado de la actividad (si lo hay).
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +158,9 @@ class MainActivity : Activity() {
 
     /**
      * Metodo para detener la tarea de fondo y cerrar la aplicación.
+     *
+     * <p>Este metodo cancela todos los trabajos asociados con la etiqueta o el ID
+     * almacenado. También finaliza la aplicación de manera controlada.</p>
      */
     private fun stopWork() {
         // Cancelar trabajos específicos por ID
