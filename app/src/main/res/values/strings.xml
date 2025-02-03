@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WebCheckerMikel</string>
+    <string name="Web_Scraping">Web Scraping</string>
+    <string name="url">URL</string>
+    <string name="Palabra">Palabra</string>
+    <string name="ON">ON</string>
+    <string name="OFF">OFF</string>
 </resources>

@@ -2,6 +2,92 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Web_Scraping"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif-medium"/>
+
+    <!-- Campos txt -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#77c7cc"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        android:elevation="8dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clipToOutline="true"
+        android:outlineProvider="background">
+
+        <EditText
+            android:id="@+id/txtURL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/url"
+            android:textColor="@android:color/black"
+            android:textColorHint="#666666"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="2dp"/>
+
+        <EditText
+            android:id="@+id/txtPalabra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/Palabra"
+            android:textColor="@android:color/black"
+            android:textColorHint="#666666"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="2dp"/>
+
+        <!-- Botones ON y OFF -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnON"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ON"
+                android:backgroundTint="#e18087"
+                android:textColor="@android:color/white"
+                android:padding="12dp"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"
+                android:elevation="4dp"/>
+
+            <Button
+                android:id="@+id/btnOFF"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/OFF"
+                android:backgroundTint="#e18087"
+                android:textColor="@android:color/white"
+                android:padding="12dp"
+                android:textStyle="bold"
+                android:elevation="4dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
