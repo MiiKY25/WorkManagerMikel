@@ -17,6 +17,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.Toast
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import java.util.UUID
@@ -71,21 +72,34 @@ class MainActivity : Activity() {
 
         // Listener para el botón "Play"
         btnPlay.setOnClickListener {
-            this.semaforo="V"
-            val sharedPreferences = getSharedPreferences("WebCheckerPrefs", MODE_PRIVATE)
-            sharedPreferences.edit().putString("semaforo", semaforo).apply()
+            val urlField = findViewById<EditText>(R.id.txtURL)
+            val wordField = findViewById<EditText>(R.id.txtPalabra)
 
-            WorkManager.getInstance(this).cancelAllWorkByTag(this.workTag)
-            val workRequest = PeriodicWorkRequestBuilder<WebCheckerWorker>(
-                15, // Intervalo mínimo de 15 minutos
-                TimeUnit.MINUTES
-            ).addTag(this.workTag).build()
+            val urlText = urlField.text.toString().trim()  // Obtener el texto de la URL
+            val wordText = wordField.text.toString().trim()  // Obtener el texto de la palabra
 
-            // Encolar el trabajo periódico
-            WorkManager.getInstance(this).enqueue(workRequest)
+            // Verificar que ambos campos no estén vacíos
+            if (urlText.isEmpty() || wordText.isEmpty()) {
+                // Si alguno de los campos está vacío, muestra un mensaje de error
+                Toast.makeText(this, "Por favor, ingresa una URL y una palabra", Toast.LENGTH_SHORT).show()
+            } else {
+                // Si ambos campos contienen texto, continuar con el flujo normal
+                this.semaforo = "V"
+                val sharedPreferences = getSharedPreferences("WebCheckerPrefs", MODE_PRIVATE)
+                sharedPreferences.edit().putString("semaforo", semaforo).apply()
 
-            // Guardar el ID del trabajo en ejecución
-            this.workId = workRequest.id
+                WorkManager.getInstance(this).cancelAllWorkByTag(this.workTag)
+                val workRequest = PeriodicWorkRequestBuilder<WebCheckerWorker>(
+                    15, // Intervalo mínimo de 15 minutos
+                    TimeUnit.MINUTES
+                ).addTag(this.workTag).build()
+
+                // Encolar el trabajo periódico
+                WorkManager.getInstance(this).enqueue(workRequest)
+
+                // Guardar el ID del trabajo en ejecución
+                this.workId = workRequest.id
+            }
         }
 
         // Listener para el botón "Stop"
