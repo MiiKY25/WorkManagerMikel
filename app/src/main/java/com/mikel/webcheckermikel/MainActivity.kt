@@ -40,16 +40,10 @@ class MainActivity : Activity() {
 
     // ID del trabajo en ejecución, generado dinámicamente
     private var workId = UUID.randomUUID()
-    private var semaforo="R"
+    private var semaforo = "R"
 
     /**
      * Metodo que se ejecuta al crear la actividad.
-     *
-     * <p>Configura los permisos necesarios, inicializa las vistas y configura los listeners
-     * para los botones de inicio y parada de la tarea de fondo. También permite al usuario
-     * introducir dinámicamente la URL y la palabra clave mediante campos de texto.</p>
-     *
-     * @param savedInstanceState Estado previamente guardado de la actividad (si lo hay).
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +64,11 @@ class MainActivity : Activity() {
         val btnPlay = findViewById<Button>(R.id.btnON)
         val btnStop = findViewById<Button>(R.id.btnOFF)
 
+        // Deshabilitar el botón "Stop" por defecto
+        btnStop.isEnabled = false
+
         // Listener para el botón "Play"
         btnPlay.setOnClickListener {
-            val urlField = findViewById<EditText>(R.id.txtURL)
-            val wordField = findViewById<EditText>(R.id.txtPalabra)
-
             val urlText = urlField.text.toString().trim()  // Obtener el texto de la URL
             val wordText = wordField.text.toString().trim()  // Obtener el texto de la palabra
 
@@ -89,27 +83,34 @@ class MainActivity : Activity() {
                 sharedPreferences.edit().putString("semaforo", semaforo).apply()
 
                 WorkManager.getInstance(this).cancelAllWorkByTag(this.workTag)
-                val workRequest = PeriodicWorkRequestBuilder<WebCheckerWorker>(
-                    15, // Intervalo mínimo de 15 minutos
-                    TimeUnit.MINUTES
-                ).addTag(this.workTag).build()
+                val workRequest = PeriodicWorkRequestBuilder<WebCheckerWorker>(15, TimeUnit.MINUTES)
+                    .addTag(this.workTag)
+                    .build()
 
                 // Encolar el trabajo periódico
                 WorkManager.getInstance(this).enqueue(workRequest)
 
                 // Guardar el ID del trabajo en ejecución
                 this.workId = workRequest.id
+
+                // Deshabilitar el botón "Play" y habilitar el botón "Stop"
+                btnPlay.isEnabled = false
+                btnStop.isEnabled = true
             }
         }
 
         // Listener para el botón "Stop"
         btnStop.setOnClickListener {
             println("Pulso boton stop")
-            this.semaforo="R"
+            this.semaforo = "R"
             val sharedPreferences = getSharedPreferences("WebCheckerPrefs", MODE_PRIVATE)
             sharedPreferences.edit().putString("semaforo", semaforo).apply()
 
             stopWork()
+
+            // Habilitar el botón "Play" y deshabilitar el botón "Stop"
+            btnPlay.isEnabled = true
+            btnStop.isEnabled = false
         }
 
         // Listener para capturar cambios en el campo de texto de la URL
@@ -151,17 +152,11 @@ class MainActivity : Activity() {
 
     /**
      * Metodo para detener la tarea de fondo y cerrar la aplicación.
-     *
-     * <p>Este metodo cancela todos los trabajos asociados con la etiqueta o el ID
-     * almacenado. También finaliza la aplicación de manera controlada.</p>
      */
     private fun stopWork() {
-        // Cancelar trabajos asociados con la etiqueta
-        //WorkManager.getInstance(this).cancelAllWorkByTag(this.workTag)
-
         // Cancelar trabajos específicos por ID
         WorkManager.getInstance(this).cancelWorkById(this.workId)
-        //WorkManager.getInstance(this).cancelAllWork()
+        // Prune trabajos antiguos
         WorkManager.getInstance(this).pruneWork()
         WorkManager.getInstance(this).getWorkInfosByTag(workTag).get().forEach { workInfo ->
             println("Trabajo ID: ${workInfo.id}, Estado: ${workInfo.state}")
@@ -172,8 +167,5 @@ class MainActivity : Activity() {
                 println("Trabajo con ID ${workInfo.id} cancelado")
             }
         }
-
-
-
     }
 }
